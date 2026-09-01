@@ -137,6 +137,9 @@ framework. Users should define dataset-specific parameters, model
 configurations, and computational settings according to their own
 applications.
 
+Example input files are provided in the `examples/` directory to illustrate 
+the expected format of molecular structure and activity data.
+
 ------------------------------------------------------------------------
 
 Reproducibility Note

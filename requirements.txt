@@ -1,0 +1,16 @@
+numpy
+pandas
+scikit-learn
+scipy
+
+rdkit
+
+xgboost
+catboost
+
+shap
+optuna
+
+matplotlib
+seaborn
+tqdm

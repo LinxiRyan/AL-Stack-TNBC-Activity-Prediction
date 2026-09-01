@@ -132,18 +132,6 @@ Usage
 The repository provides modular implementations for different stages of
 the computational workflow.
 
-A typical usage scenario includes:
-
-1.  Downloading molecular activity data from ChEMBL and NCI databases.
-2.  Preparing and standardizing molecular structures.
-3.  Generating molecular fingerprints and descriptors.
-4.  Performing feature selection.
-5.  Training machine learning models.
-6.  Applying active learning strategies for molecular selection.
-7.  Processing generated molecules obtained from molecular generation
-    workflows.
-8.  Performing model evaluation and interpretation.
-
 The released implementation is intended to provide the methodological
 framework. Users should define dataset-specific parameters, model
 configurations, and computational settings according to their own

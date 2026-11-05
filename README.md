@@ -1,165 +1,87 @@
 # AL-Stack-TNBC-Activity-Prediction
 
-Reference implementation for an active learning and stacking-based
-molecular activity prediction framework for TNBC cells.
+Reference implementation for the generation-augmented self-training and stacking framework for predicting molecular growth-inhibitory activity (pGI50) in MDA-MB-231 triple-negative breast cancer (TNBC) cells.
 
-This repository provides the computational implementation associated
-with the study, including molecular data preprocessing, molecular
-representation generation, feature selection, machine learning modeling,
-active learning-based sample enrichment, molecular generation
-post-processing, and model interpretation.
+This repository provides study-specific code for data preprocessing, molecular representations, feature selection, stacking regression, iterative sample selection, REINVENT 4 data preparation and post-processing, and model interpretation. The implementation is modular and can be adapted to other datasets.
 
-The released code is designed as a modular framework. Users can adapt
-individual components according to their own molecular datasets and
-computational requirements.
+## Data Availability
 
-------------------------------------------------------------------------
+The original activity records were obtained from publicly available resources:
 
-Data Availability
+- **ChEMBL (release 35):** https://www.ebi.ac.uk/chembl/
+- **NCI-60 / DTP (via CellMiner):** https://dtp.cancer.gov/
 
-The datasets used in this study were obtained from publicly available
-databases.
+The raw source-database exports are not redistributed. To make the analyses in the manuscript auditable, the `data/` directory contains the following **study-specific processed tables**:
 
-ChEMBL
+| File | Contents |
+| --- | --- |
+| `data/processed_dataset.csv` | Processed modeling compounds (n = 38,681), including canonical SMILES, pGI50, source database/record identifier, and original train/validation/test split assignment. |
+| `data/generated_candidate_pool.csv` | Filtered REINVENT 4 candidate molecules, source activity bin, selection status/round, and model-assigned pseudo-pGI50 for selected candidates. A missing pseudo-label means that no pseudo-label was assigned to that candidate. |
+| `data/external_validation_929.csv` | External categorical validation compounds (n = 929; 189 active and 740 inactive), including SMILES, reference class label, source/reference and available label provenance. |
 
-Bioactivity data were collected from the ChEMBL database:
+The external active/inactive annotations originate from the cited source records; they are **not** assumed to have been assigned using one uniform experimental GI50 cutoff. The `pGI50` values assigned to generated molecules are **model-derived pseudo-labels, not experimental measurements**.
 
-https://www.ebi.ac.uk/chembl/
+These processed tables document the study-specific preprocessing, split and external annotations that cannot be reconstructed unambiguously from the public databases alone.
 
-Users can retrieve molecular activity records through the ChEMBL
-platform, including:
+## Molecular Generation
 
--   Molecular structures
--   Bioactivity measurements
--   Assay information
--   Target and cell-line related annotations
+Molecular generation used [REINVENT 4](https://github.com/MolecularAI/REINVENT4), with separate generation tasks for the original training-data pGI50 intervals [5,6), [6,7), [7,8), and [8,9]. The generation preparation and post-processing code is in `src/`.
 
-The downloaded ChEMBL records can be processed using the provided
-scripts to generate molecular activity datasets suitable for model
-development.
+The `configs/reinvent/` directory contains the study-specific REINVENT transfer-learning and mol2mol sampling configurations (including the prior model identifier, sampling settings, seed settings and interval-specific augmentation factors). The REINVENT 4 source code, pretrained model weights, and fine-tuned checkpoints are not redistributed; obtain the software and applicable pretrained models from the official project.
 
-------------------------------------------------------------------------
+## Repository Structure
 
-NCI Anticancer Screening Data
+```text
+.
+├── README.md
+├── requirements.txt
+├── data/
+│   ├── processed_dataset.csv
+│   ├── generated_candidate_pool.csv
+│   └── external_validation_929.csv
+├── configs/
+│   ├── model_hyperparameters.yaml
+│   └── reinvent/
+└── src/
+    ├── preprocessing.py
+    ├── fingerprint.py
+    ├── descriptors.py
+    ├── feature_selection.py
+    ├── stacking_model.py
+    ├── sample_selection.py
+    ├── active_learning.py
+    ├── evaluation.py
+    ├── interpretability.py
+    ├── prepare_generation_data.py
+    └── postprocess_generated.py
+```
 
-Additional molecular activity data were obtained from the NCI anticancer
-screening database:
+`configs/model_hyperparameters.yaml` records the study-specific CatBoost, XGBoost, MLP and Ridge settings, together with the hyperparameter-tuning procedure. The documented implementation uses the original train/validation/test protocol; any additional scaffold-split evaluation should be distinguished from that original split.
 
-https://dtp.cancer.gov/
+## Installation
 
-Users can retrieve:
+Install the Python dependencies:
 
--   Compound identifiers
--   Molecular structures
--   Cell-line-specific activity measurements
+```bash
+pip install -r requirements.txt
+```
 
-The corresponding downloaded records can be processed using the provided
-preprocessing workflow.
+For RDKit, conda-forge installation is recommended:
 
-The raw datasets are not redistributed in this repository. Users should
-obtain the original data directly from the corresponding public
-databases.
+```bash
+conda install -c conda-forge rdkit
+```
 
-------------------------------------------------------------------------
+REINVENT 4 must be installed separately when reproducing the generation stage.
 
-Molecular Generation
+## Usage and Reproducibility
 
-Molecular generation was performed using REINVENT4:
+The `src/` scripts implement individual stages of the workflow. Use the processed tables and study-specific configurations to inspect or reproduce the relevant stages. The generation and model configurations should be used with the software versions documented in `requirements.txt` and the official REINVENT 4 installation.
 
-https://github.com/MolecularAI/REINVENT4
+The released material is intended to support methodological inspection and computational reproduction. Full trained-model checkpoints and exhaustive intermediate training logs are not included. The provided pseudo-labels and docking predictions are computational outputs and do not constitute experimental activity or target-binding validation.
 
-REINVENT4 is an AI-driven molecular design framework supporting transfer
-learning, reinforcement learning, and molecular optimization.
+## Citation
 
-In this study, activity-associated molecular subsets were prepared and
-used with REINVENT4-based molecular generation workflows. The released
-repository only contains study-specific preparation and post-processing
-procedures.
+If you use this code or associated data, please cite:
 
-The following materials are not included:
-
--   REINVENT4 source code
--   Pretrained models
--   Fine-tuned checkpoints
--   Experiment-specific configuration files
--   Sampling parameters
-
-Users should install and configure REINVENT4 following the official
-documentation and specify appropriate generation settings according to
-their own requirements.
-
-------------------------------------------------------------------------
-
-Repository Structure
-
-    .
-    ├── README.md
-    ├── requirements.txt
-    │
-    └── src
-        ├── preprocessing.py
-        ├── fingerprint.py
-        ├── descriptors.py
-        ├── feature_selection.py
-        ├── stacking_model.py
-        ├── sample_selection.py
-        ├── active_learning.py
-        ├── evaluation.py
-        ├── interpretability.py
-        ├── prepare_generation_data.py
-        └── postprocess_generated.py
-
-------------------------------------------------------------------------
-
-Installation
-
-Install the required Python dependencies:
-
-    pip install -r requirements.txt
-
-For RDKit, installation through conda-forge is recommended:
-
-    conda install -c conda-forge rdkit
-
-The code was developed and tested in a Python-based scientific computing
-environment. Users may need to adjust package versions according to
-their operating system and hardware configuration.
-
-------------------------------------------------------------------------
-
-Usage
-
-The repository provides modular implementations for different stages of
-the computational workflow.
-
-The released implementation is intended to provide the methodological
-framework. Users should define dataset-specific parameters, model
-configurations, and computational settings according to their own
-applications.
-
-Example input files are provided in the `examples/` directory to illustrate 
-the expected format of molecular structure and activity data.
-
-------------------------------------------------------------------------
-
-Reproducibility Note
-
-Due to confidentiality restrictions, some experiment-specific materials
-are not distributed, including:
-
--   Raw processed datasets
--   Trained model checkpoints
--   Internal optimization configurations
--   Experiment-specific hyperparameters
--   Molecular generation configuration files
-
-The released repository provides the computational workflow and can be
-adapted using publicly available molecular activity datasets.
-
-------------------------------------------------------------------------
-
-Citation
-
-If you use this code, please cite:
-
-[Publication information will be added after publication]
+*A Generation-Augmented Self-Training Framework for Anti-TNBC Activity Prediction with Imbalanced Data.* [Full citation to be added after publication.]

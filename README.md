@@ -6,23 +6,24 @@ This repository provides study-specific code for data preprocessing, molecular r
 
 ## Data Availability
 
-The molecular activity data used in this study were obtained from the publicly available [ChEMBL database (release 35)](https://www.ebi.ac.uk/chembl/) and [NCI-60/DTP data (via CellMiner)](https://dtp.cancer.gov/). The study-specific processed datasets, including the modeling dataset, generated molecular candidates, and external validation set, are available as **separate ZIP archives** on the [GitHub Releases page](https://github.com/LinxiRyan/AL-Stack-TNBC-Activity-Prediction/releases). Raw source-database exports are not redistributed.
+The molecular activity data used in this study were obtained from publicly available resources, including [ChEMBL (release 35)](https://www.ebi.ac.uk/chembl/) and the [NCI anticancer screening database (via CellMiner)](https://dtp.cancer.gov/).
+
+Study-specific processed datasets and supplementary materials supporting the analyses are distributed through this repository and its associated [GitHub Releases](https://github.com/LinxiRyan/AL-Stack-TNBC-Activity-Prediction/releases). The available resources are described in the repository and relevant release notes. Additional data and supporting materials may be added in future updates.
 
 ## Molecular Generation
 
-Molecular generation used [REINVENT 4](https://github.com/MolecularAI/REINVENT4), with separate generation tasks for the original training-data pGI50 intervals [5,6), [6,7), [7,8), and [8,9]. The generation preparation and post-processing code is in `src/`.
+Molecular generation was performed using [REINVENT 4](https://github.com/MolecularAI/REINVENT4), with separate generation tasks for the original training-data pGI50 intervals [5,6), [6,7), [7,8), and [8,9]. Study-specific data preparation and post-processing procedures are implemented in `src/`.
 
-The `configs/reinvent/` directory contains the study-specific REINVENT transfer-learning and mol2mol sampling configurations (including the prior model identifier, sampling settings, seed settings, and interval-specific augmentation factors). The REINVENT 4 source code, pretrained model weights, and fine-tuned checkpoints are not redistributed; obtain the software and applicable pretrained models from the official project.
+REINVENT 4 is maintained by its original developers and must be installed separately. Its source code and pretrained model weights are not redistributed here. Study-specific experimental settings and supporting configuration materials are documented in the repository or the associated release materials, as applicable.
 
 ## Repository Structure
+
+The main source-code modules are organized as follows:
 
 ```text
 .
 ├── README.md
 ├── requirements.txt
-├── configs/
-│   ├── model_hyperparameters.yaml
-│   └── reinvent/
 └── src/
     ├── preprocessing.py
     ├── fingerprint.py
@@ -37,9 +38,7 @@ The `configs/reinvent/` directory contains the study-specific REINVENT transfer-
     └── postprocess_generated.py
 ```
 
-**Data files are distributed separately as ZIP archives via GitHub Releases.** After downloading and extracting them, place the CSV files in a local `data/` folder; this folder is not part of the tracked repository structure shown above.
-
-`configs/model_hyperparameters.yaml` records the study-specific CatBoost, XGBoost, MLP, and Ridge settings, together with the hyperparameter-tuning procedure. The documented implementation uses the original train/validation/test protocol; any additional scaffold-split evaluation should be distinguished from that original split.
+Additional datasets, experiment configurations, and supporting files may be provided directly in the repository or as downloadable assets in GitHub Releases. Their organization may be updated as further materials are made available.
 
 ## Installation
 
@@ -49,19 +48,19 @@ Install the Python dependencies:
 pip install -r requirements.txt
 ```
 
-For RDKit, conda-forge installation is recommended:
+For RDKit, installation through conda-forge is recommended:
 
 ```bash
 conda install -c conda-forge rdkit
 ```
 
-REINVENT 4 must be installed separately when reproducing the generation stage.
+REINVENT 4 must be installed separately when reproducing the molecular generation stage.
 
 ## Usage and Reproducibility
 
-The `src/` scripts implement individual stages of the workflow. Download the required ZIP archive(s) from the [GitHub Releases page](https://github.com/LinxiRyan/AL-Stack-TNBC-Activity-Prediction/releases), extract the CSV file(s), and place them in a local `data/` folder, or adjust input paths as needed. Use these tables and the study-specific configurations to inspect or reproduce the relevant stages. The generation and model configurations should be used with the software versions documented in `requirements.txt` and the official REINVENT 4 installation.
+The scripts in `src/` implement individual stages of the computational workflow. Refer to the available datasets, configuration materials, and release notes for study-specific inputs and settings. Users may adapt file paths and computational configurations to their environments.
 
-The released material is intended to support methodological inspection and computational reproduction. Full trained-model checkpoints and exhaustive intermediate training logs are not included. The provided pseudo-labels and docking predictions are computational outputs and do not constitute experimental activity or target-binding validation.
+The released materials are intended to support methodological inspection and computational reproducibility. Full trained-model checkpoints and exhaustive intermediate training logs are not necessarily included. Model-assigned pseudo-labels and molecular docking results are computational outputs, not experimental validation of cellular activity or target binding.
 
 ## Citation
 

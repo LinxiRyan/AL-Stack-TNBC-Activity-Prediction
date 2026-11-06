@@ -8,7 +8,9 @@ This repository provides study-specific code for data preprocessing, molecular r
 
 The molecular activity data used in this study were obtained from publicly available resources, including [ChEMBL (release 35)](https://www.ebi.ac.uk/chembl/) and the [NCI anticancer screening database (via CellMiner)](https://dtp.cancer.gov/).
 
-Study-specific processed datasets and supplementary materials supporting the analyses are distributed through this repository and its associated [GitHub Releases](https://github.com/LinxiRyan/AL-Stack-TNBC-Activity-Prediction/releases). The available resources are described in the repository and relevant release notes. Additional data and supporting materials may be added in future updates.
+To support transparency and reproducibility, the study-specific datasets, source data annotations, computational codes, and supplementary materials requested during peer review are made available through this repository and its associated [GitHub Releases](https://github.com/LinxiRyan/AL-Stack-TNBC-Activity-Prediction/releases). These resources include processed molecular activity datasets, generated molecular data and associated pseudo-labels, the external validation dataset comprising 929 compounds with activity annotations, and supporting configuration files and analysis scripts.
+
+Detailed descriptions of the available resources are provided in the repository documentation and corresponding release notes. Additional supporting materials and updates may be provided as necessary.
 
 ## Molecular Generation
 
